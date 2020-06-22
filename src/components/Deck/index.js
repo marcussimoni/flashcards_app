@@ -1,19 +1,22 @@
-import React from 'react'
-
+import React, { useState, useEffect, Fragment } from 'react'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { StatusBar, Text, FlatList } from 'react-native'
+import DeckService from '../../services/DeckService'
+import style from './style'
 
 const Deck = (props) => {
     const [decks, setdecks] = useState([])
     
     useEffect(() => {
-    DeckService.findAll().then(response => {
-        response.json().then(json => setdecks(json))      
-    }, error => {
-        alert('erro')
-    })
+        DeckService.findAll().then(response => {
+            response.json().then(json => setdecks(json))      
+        }, error => {
+            alert('erro')
+        })
     }, [])
 
     const deckSelectHandler = (item) => {
-        alert(item.name)
+        console.warn('deck selected')
     }
 
     const selectAction = () => {
@@ -31,7 +34,7 @@ const Deck = (props) => {
                     return (
                     <TouchableOpacity onPress={() => deckSelectHandler(item)} onLongPress={() => selectAction()}>
                         <Fragment key={index}>   
-                            <Text>{item.name}</Text>
+                            <Text style={style.listItem}>{item.name}</Text>
                             <Text>{item.description}</Text>
                         </Fragment>
                     </TouchableOpacity>
@@ -42,3 +45,5 @@ const Deck = (props) => {
         </ScrollView>
     )
 }
+
+export default Deck;

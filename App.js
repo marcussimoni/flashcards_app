@@ -1,11 +1,21 @@
 import React from 'react';
 
-import Login from './src/components/Login';
+import { NavigationContainer } from '@react-navigation/native';
+import Routes from './src/routes'
+import {AuthProvider} from './src/context/auth'
 
 const App = () => {
 
   return (
-    <Login></Login>    
+    <NavigationContainer>
+        
+        <AuthProvider>
+        
+          <Routes></Routes>
+        
+        </AuthProvider>
+        
+    </NavigationContainer>
   );
 };
 

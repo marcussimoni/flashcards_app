@@ -1,0 +1,38 @@
+import AuthContext from "../context/auth";
+import { useContext } from "react";
+import { AsyncStorage } from "react-native";
+
+const getHeaders = (token) => {
+    const headers = new Headers({
+        'content-type': 'application/json'
+    }) 
+    if(token){
+        headers.append('Authorization', `${token.type} ${token.token}`)
+    }
+    return headers
+}
+
+const HttpService = () => {
+
+    const url = 'http://10.0.2.2:8090'
+    
+    return {
+        get: async (path) => {
+            const token = await AsyncStorage.getItem('token')
+            return fetch(`${url}/${path}`, {
+                method: 'get',
+                headers: getHeaders(token)
+            })
+        },
+        post: async (path, body) => {
+            const token = await AsyncStorage.getItem('token')
+            return fetch(`${url}/${path}`, {
+                method: 'post',
+                headers: getHeaders(token),
+                body: JSON.stringify(body)
+            }) 
+        }
+    }
+}
+
+export default HttpService;

@@ -1,21 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { View, TextInput, Text, StyleSheet, Button } from 'react-native';
-
-const login = (username, password) => {
-    fetch('http://10.0.2.2:8090/authentication/sign-in', {
-        method: 'post',
-        headers: new Headers({
-            'content-type': 'application/json'
-        }),
-        body: JSON.stringify(
-            {
-                email: username,
-                password: password
-            }
-        )
-    }).then(response => response.json())
-    .then(json => alert(JSON.stringify(json)))
-}
+import AuthContext from '../../context/auth'
 
 const styles = StyleSheet.create({
     container: {
@@ -46,10 +31,15 @@ const styles = StyleSheet.create({
 }) 
 
 const Login = () => {   
-
-    const [username, setUsername] = useState("username")
-    const [password, setPassword] = useState("password")
     
+    const { loginHandler } = useContext(AuthContext);
+    const [username, setUsername] = useState('admin@flashcards.com')
+    const [password, setPassword] = useState("123456")
+    
+    function login(){
+        loginHandler(username, password)
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.title}>
@@ -58,11 +48,11 @@ const Login = () => {
             </View>
             <View style={styles.content}>
 
-                <TextInput placeholder="Username" style={styles.inputText} onChangeText={(text) => setUsername(text)}></TextInput>
-                <TextInput placeholder="Password" style={styles.inputText} onChangeText={text => setPassword(text)}></TextInput>
+                <TextInput value={username} placeholder="Username" style={styles.inputText} onChangeText={text => setUsername(text)}></TextInput>
+                <TextInput value={password} secureTextEntry={true} placeholder="Password" style={styles.inputText} onChangeText={text => setPassword(text)}></TextInput>
                 
                 <View style={{width: '100%'}}>
-                    <Button title="Login" onPress={() => login(username, password)}/>
+                    <Button title="Login" onPress={login}/>
                 </View>
 
             </View>
