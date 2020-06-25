@@ -1,14 +1,9 @@
 import UserService from './UserService';
+import HttpService from './HttpService';
+
 
 const DeckService = {
-    findAll: () => {
-        return fetch('http://10.0.2.2:8090/deck', {
-            method: 'get',
-            headers: new Headers({
-            'Authorization': 'Bearer ' + UserService.getToken()
-            })
-        })
-    }
+    findAll: () => HttpService().get('deck') 
 }
 
 export default DeckService

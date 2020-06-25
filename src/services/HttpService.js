@@ -1,5 +1,3 @@
-import AuthContext from "../context/auth";
-import { useContext } from "react";
 import { AsyncStorage } from "react-native";
 
 const getHeaders = (token) => {
@@ -7,6 +5,7 @@ const getHeaders = (token) => {
         'content-type': 'application/json'
     }) 
     if(token){
+        token = JSON.parse(token)
         headers.append('Authorization', `${token.type} ${token.token}`)
     }
     return headers
@@ -33,6 +32,7 @@ const HttpService = () => {
             }) 
         }
     }
+
 }
 
 export default HttpService;

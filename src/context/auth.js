@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null)
     
     function loginHandler(email, password){
-        console.warn('login ...')
         HttpService().post('authentication/sign-in',{email, password}).then(response => response.json()).then(json => {
             const setItem = async () => await AsyncStorage.setItem('token', JSON.stringify(json))
             setItem()
