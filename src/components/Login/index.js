@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { View, TextInput, Text, StyleSheet, Button } from 'react-native';
 import AuthContext from '../../context/auth'
+import CustomInputText from '../Common/CustomInputText';
 
 const styles = StyleSheet.create({
     container: {
@@ -48,8 +49,8 @@ const Login = () => {
             </View>
             <View style={styles.content}>
 
-                <TextInput value={username} placeholder="Username" style={styles.inputText} onChangeText={text => setUsername(text)}></TextInput>
-                <TextInput value={password} secureTextEntry={true} placeholder="Password" style={styles.inputText} onChangeText={text => setPassword(text)}></TextInput>
+                <CustomInputText value={username} placeholder="Username" onChangeText={text => setUsername(text)}></CustomInputText>
+                <CustomInputText value={password} secureTextEntry={true} placeholder="Password" style={styles.inputText} onChangeText={text => setPassword(text)}></CustomInputText>
                 
                 <View style={{width: '100%'}}>
                     <Button title="Login" onPress={login}/>
