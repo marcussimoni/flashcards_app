@@ -1,26 +1,18 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { Text, FlatList, View, Alert } from 'react-native'
-import DeckService from '../../services/DeckService'
 import style from './style'
 
 const ListDecks = (props) => {
-    const [decks, setdecks] = useState([])
-    
-    useEffect(() => {
-        DeckService.findAll().then(response => response.json()).then(json => setdecks(json))
-    }, [])
 
+    const {decks} = props
+    
     const deckSelectHandler = (item) => {
        const {navigation} = props
        navigation.dangerouslyGetParent().setOptions({
            tabBarVisible: false
        })
        navigation.navigate('Flashcards', {screen: 'ListFlashcards', params: item})
-    }
-
-    const selectAction = () => {
-        Alert.alert('prompt')
     }
 
     return (
