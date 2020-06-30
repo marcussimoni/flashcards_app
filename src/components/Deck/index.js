@@ -1,45 +1,29 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import { StatusBar, Text, FlatList, View, Alert } from 'react-native'
-import DeckService from '../../services/DeckService'
-import style from './style'
+import React, { useEffect } from 'react'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ListDecks from "./ListDecks";
+import AddDeck from './AddDeck'
+import { createStackNavigator } from "@react-navigation/stack";
+import Flashcards from "../Flashcards";
 
-const Deck = (props) => {
-    const [decks, setdecks] = useState([])
-    
-    useEffect(() => {
-        DeckService.findAll().then(response => response.json()).then(json => setdecks(json))
-    }, [])
+const Tab = createBottomTabNavigator()
+const Stack = createStackNavigator()
 
-    const deckSelectHandler = (item) => {
-        console.warn('deck selected')
-    }
+const DeckStack = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="ListDecks" component={ListDecks}/>
+            <Stack.Screen name="Flashcards" component={Flashcards}/>
+        </Stack.Navigator>
+    )
+}
 
-    const selectAction = () => {
-        Alert.alert('prompt')
-    }
+const Deck = () => {
 
     return (
-        <View>
-            <ScrollView>
-                <StatusBar barStyle="dark-content" />
-                <FlatList
-                    data={decks}
-                    keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => {
-                            return (
-                            <TouchableOpacity onPress={() => deckSelectHandler(item)} onLongPress={() => selectAction()}>
-                                <View key={index} style={style.listItem}>   
-                                    <Text style={style.listLabel}>{item.name}</Text>
-                                    <Text style={style.listDescription}>{item.description}</Text>
-                                </View>
-                            </TouchableOpacity>
-                            )
-                        }
-                    }
-                />
-            </ScrollView>
-        </View>
+        <Tab.Navigator>
+            <Tab.Screen name="Decks" component={DeckStack}/>
+            <Tab.Screen name="AddDeck" component={AddDeck}/>
+        </Tab.Navigator>
     )
 
 }
