@@ -30,6 +30,13 @@ const HttpService = () => {
                 headers: getHeaders(token),
                 body: JSON.stringify(body)
             }) 
+        },
+        delete: async (path) => {
+            const token = await AsyncStorage.getItem('token')
+            return fetch(`${url}/${path}`, {
+                method: 'delete',
+                headers: getHeaders(token)
+            }) 
         }
     }
 
