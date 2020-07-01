@@ -1,10 +1,11 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Text, FlatList, View} from 'react-native';
+import {Text, FlatList, View, Alert} from 'react-native';
 import style from './style';
+import DeckService from '../../services/DeckService';
 
 const ListDecks = props => {
-  const {decks} = props;
+  let {decks} = props;
 
   const deckSelectHandler = item => {
     const {navigation} = props;
@@ -13,6 +14,24 @@ const ListDecks = props => {
     });
     navigation.navigate('Flashcards', {screen: 'ListFlashcards', params: {deck: item}});
   };
+
+  const removeDeck = (deck) => {
+    Alert.alert(
+      'Delete deck',
+      `Confirm remove of '${deck.name}' deck?`,
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            DeckService.delete(deck.id)
+              .then(response => decks = decks.filter(item => deck.id !== item.id))
+              .catch(error => alert('Failed to remove deck'));
+          },
+        },
+        {text: 'No'},
+      ],
+    );
+  }
 
   return (
       <View>
@@ -23,7 +42,7 @@ const ListDecks = props => {
             return (
               <TouchableOpacity
                 onPress={() => deckSelectHandler(item)}
-                onLongPress={() => selectAction()}>
+                onLongPress={() => removeDeck(item)}>
                 <View key={index} style={style.listItem}>
                   <Text style={style.listLabel}>{item.name}</Text>
                   <View style={style.descriptionContent}>
