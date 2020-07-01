@@ -26,14 +26,18 @@ const AddDeck = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
 
+    const clearInputFields = () => {
+        setTitle('')
+        setDescription('')
+    }
+
     const saveDeckHandler = () => {
         if(validate(title, description)){
             DeckService.save({name: title, description}).then(reponse => {
-                if(response.ok()){
-                    return response.json()
-                }
-            }).then(json => {
                 Alert.alert('New deck created', `The deck ${title} was added`)
+                clearInputFields()
+            }).catch(error => {
+                Alert.alert('Erro while saving new deck')
             })
         }
     }

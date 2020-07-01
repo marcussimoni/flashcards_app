@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
-import { Text, FlatList, View, Alert } from 'react-native'
+import { Text, FlatList, View } from 'react-native'
 import style from './style'
 
 const ListDecks = (props) => {
