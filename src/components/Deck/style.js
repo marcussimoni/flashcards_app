@@ -2,15 +2,7 @@ import {StyleSheet} from 'react-native';
 import Style from '../../style';
 
 const fontColor = 'white';
-
-const textShadow = {
-  textShadowColor: '#444',
-  textShadowOffset: {
-    height: 2,
-    width: 2,
-  },
-  textShadowRadius: 3,
-};
+const textShadow = Style.textShadow
 
 const style = StyleSheet.create({
   listItem: {

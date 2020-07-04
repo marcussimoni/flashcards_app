@@ -5,6 +5,7 @@ import AddDeck from './AddDeck'
 import { createStackNavigator } from "@react-navigation/stack";
 import Flashcards from "../Flashcards";
 import DeckService from '../../services/DeckService'
+import CustomLoading from '../Common/CustomLoading';
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -13,9 +14,16 @@ const ListDeckComponent = (props) => {
 
     const {navigation} = props
     const [decks, setDecks] = useState({})
+    const [loading, setLoading] = useState(false)
 
     const findAllDecks = () => {
-        DeckService.findAll().then(response => response.json()).then(json => setDecks(json))
+        setLoading(true)
+        DeckService.findAll().then(response => response.json()).then(json => {
+            setDecks(json)
+            setLoading(false)
+        }).catch(error => {
+            setLoading(false)
+        })
     }
 
     useEffect(() => {
@@ -27,7 +35,12 @@ const ListDeckComponent = (props) => {
         })
     }, [navigation])
 
-    return <ListDecks {...props} decks={decks}></ListDecks>
+    return (
+        <>
+            <CustomLoading animating={loading}/>
+            <ListDecks {...props} decks={decks}></ListDecks>
+        </>    
+    )
 
 }
 
@@ -47,6 +60,7 @@ const Deck = () => {
             <Tab.Screen name="Decks" component={DeckStack}/>
             <Tab.Screen name="AddDeck" component={AddDeck}/>
         </Tab.Navigator>
+        
     )
 
 }

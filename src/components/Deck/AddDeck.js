@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, Button, Alert } from 'react-native'
+import { View, StyleSheet, Alert } from 'react-native'
 import CustomInputText from '../Common/CustomInputText'
 import DeckService from '../../services/DeckService'
-import Style from '../../style'
+import CustomButton from '../Common/CustomButton'
+import {Title, Paragraph} from 'react-native-paper'
 
 const validate = (title, description) => {
 
@@ -46,10 +47,14 @@ const AddDeck = () => {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
+                <View style={styles.title}>
+                    <Title>Create new deck</Title>
+                    <Paragraph>Type the name and description to create a new deck for your flashcards.</Paragraph>
+                </View>
                 <CustomInputText value={title} placeholder="Deck title" onChangeText={(text) => setTitle(text)}/>
                 <CustomInputText value={description} placeholder="Deck description" onChangeText={(text) => setDescription(text)}/>
                 <View style={styles.button}>
-                    <Button title="Save" onPress={saveDeckHandler}/>
+                    <CustomButton icon="cards-variant" onPress={saveDeckHandler}>Save</CustomButton>
                 </View>
             </View>
         </View>
@@ -59,8 +64,7 @@ const AddDeck = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: Style.backgroundColor
+        flex: 1
     }, 
     content: {
         width: '80%',
@@ -72,6 +76,10 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '100%'
+    },
+    title: {
+        textAlign: 'center',
+        marginBottom: 20
     }
 })
 

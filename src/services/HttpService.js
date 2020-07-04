@@ -13,7 +13,7 @@ const getHeaders = (token) => {
 
 const HttpService = () => {
 
-    const url = 'http://10.0.2.2:8090'
+    const url = 'http://10.0.2.2:8080/flashcards/resources'
     
     return {
         get: async (path) => {

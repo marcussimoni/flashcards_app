@@ -1,11 +1,14 @@
 import React, {useEffect, useState, Fragment} from 'react';
-import {View, Text, Alert} from 'react-native';
+import {View, Alert} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './Styles';
 import CustomModal from '../Common/CustomModal';
 import AddFlashcard from './AddFlashcard';
 import FlashcardsService from '../../services/FlashcardsService';
+import {Card, Title, Paragraph, Avatar, Divider, FAB} from 'react-native-paper'
+import CustomLoading from '../Common/CustomLoading';
+import Style from '../../style';
 
 Icon.loadFont();
 
@@ -16,12 +19,23 @@ const ShowNewCardModal = (component, {showModal}) => (
 const ListFlashcards = ({navigation, route}) => {
   const [flashcards, setFlashcards] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [floatButtonLabel, setFloatButtonLabel] = useState('')
   const deck = route.params.deck;
 
   const findAllFlashcards = deck => {
+    setLoading(true)
+    setFloatButtonLabel('create new flashcard')
     FlashcardsService.findByDeck(deck)
       .then(response => response.json())
-      .then(json => setFlashcards(json));
+      .then(json => {
+        setFlashcards(json)
+        setLoading(false)
+        setFloatButtonLabel('')
+      }).catch(error => {
+        setLoading(false)
+        setFloatButtonLabel('')
+      });
   };
 
   const deleteFlashcard = flashcard => {
@@ -62,7 +76,10 @@ const ListFlashcards = ({navigation, route}) => {
 
   return (
     <Fragment>
+      
       <ModalAddNewFlashcard />
+      
+      <CustomLoading animating={loading}/>
 
       <View>
         <FlatList
@@ -71,22 +88,26 @@ const ListFlashcards = ({navigation, route}) => {
           renderItem={({item, index}) => {
             return (
               <TouchableOpacity onLongPress={() => deleteFlashcard(item)}>
-                <View key={index} style={styles.listItem}>
-                  <Text style={styles.listQuestion}>{item.question}</Text>
-                  <Text style={styles.listAnswer}>{item.answer}</Text>
-                </View>
+                <Card key={index} style={styles.listItem}>
+                  <Title style={styles.listQuestion}>{item.question}</Title>
+                  <Divider style={{backgroundColor: 'white', marginTop: 10, marginBottom: 10}}/>
+                  <Paragraph style={styles.listAnswer}>{item.answer}</Paragraph>
+                </Card>
               </TouchableOpacity>
             );
           }}
         />
       </View>
-      <View style={styles.floatButton}>
-        <TouchableOpacity
-          style={styles.floatIcon}
-          onPress={() => setShowModal(true)}>
-          <Icon name="add" size={45} />
-        </TouchableOpacity>
-      </View>
+      {
+        loading ? null :
+        <FAB
+          style={styles.floatButton}
+          color={Style.backgroundColor}
+          icon="plus" large loading={showModal}
+          label={floatButtonLabel}
+          onPress={() => setShowModal(true)}
+        />
+      }
     </Fragment>
   );
 };

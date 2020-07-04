@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import {View, Button, Text, Alert} from 'react-native';
+import {View, Alert} from 'react-native';
 import CustomInputText from '../Common/CustomInputText';
 import FlashcardsService from '../../services/FlashcardsService';
+import CustomButton from '../Common/CustomButton';
+import {Title, Paragraph} from 'react-native-paper'
 
 const AddFlashcard = ({deck, updateFlashcards}) => {
 
@@ -29,10 +31,13 @@ const AddFlashcard = ({deck, updateFlashcards}) => {
 
   return (
     <View>
-      <Text>Create new flashcard</Text>
+      <View style={{marginBottom: 20}}>
+        <Title>Create new flashcard</Title>
+        <Paragraph>Type flashcard question and answer to save into '{deck.name}'</Paragraph>
+      </View>
       <CustomInputText value={question} placeholder="Type flashcard question" onChangeText={(text) => setQuestion(text)}/>
       <CustomInputText value={answer} placeholder="Type flashcard answer" onChangeText={(text) => setAnswer(text)}/>
-      <Button title="Save" onPress={() => save()} />
+      <CustomButton icon="cards-outline" onPress={() => save()}>Save</CustomButton>
     </View>
   );
 };

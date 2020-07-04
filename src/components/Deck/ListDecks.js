@@ -1,8 +1,9 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Text, FlatList, View, Alert} from 'react-native';
+import {FlatList, View, Alert} from 'react-native';
 import style from './style';
 import DeckService from '../../services/DeckService';
+import {Card, Title, Paragraph} from 'react-native-paper'
 
 const ListDecks = props => {
   let {decks} = props;
@@ -43,13 +44,15 @@ const ListDecks = props => {
               <TouchableOpacity
                 onPress={() => deckSelectHandler(item)}
                 onLongPress={() => removeDeck(item)}>
-                <View key={index} style={style.listItem}>
-                  <Text style={style.listLabel}>{item.name}</Text>
-                  <View style={style.descriptionContent}>
-                    <Text style={style.listDescription}>{item.description}</Text>
-                    <Text style={style.listCards}>10 Flashcards</Text>
-                  </View>
-                </View>
+                <Card key={index} style={style.listItem}>
+                  <Card.Content>
+                    <Title style={style.listLabel}>{item.name}</Title>
+                    <View style={style.descriptionContent}>
+                      <Paragraph style={style.listDescription}>{item.description}</Paragraph>
+                      <Paragraph style={style.listCards}>{item.totalFlashcards} Flashcards</Paragraph>
+                    </View>
+                  </Card.Content>
+                </Card>
               </TouchableOpacity>
             );
           }}

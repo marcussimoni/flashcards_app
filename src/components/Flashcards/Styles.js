@@ -35,28 +35,21 @@ const styles = StyleSheet.create({
   listQuestion: {
     fontSize: 30,
     color: fontColor,
-    fontWeight: '600',
     ...textShadow,
   },
   listAnswer: {
     fontSize: 15,
     color: fontColor,
-    fontWeight: '600',
-    marginLeft: 1,
     ...textShadow,
   },
   floatButton: {
     position: 'absolute',
     bottom: 10,
     right: 10,
-    width: 50,
-    height: 50,
-    borderWidth: 2,
     backgroundColor: 'white',
-    borderRadius: 25
-  },
-  floatIcon: {
-    
+    borderColor: Style.backgroundColor,
+    borderWidth: 2,
+    fontSize: 50
   }
 });
 
