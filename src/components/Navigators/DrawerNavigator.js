@@ -14,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DrawerNavigator = props => {
  
-  const {user} = props
+  const {user, olderFlashcards} = props
 
   const navigateTo = view => {
     props.navigation.navigate(view);
@@ -60,7 +60,7 @@ const DrawerNavigator = props => {
                 style={{flexWrap: 'wrap'}}
                 onPress={() => navigateTo('Configuration')}
               />
-              <Badge size={30} style={{position: 'absolute', right: 10, top: 0}}>10</Badge>
+              {olderFlashcards === 0 ? null : <Badge size={30} style={{position: 'absolute', right: 10, top: 0}}>{olderFlashcards}</Badge>}
             </SafeAreaView>
 
             <DrawerItem
