@@ -63,7 +63,7 @@ const Login = () => {
                 <CustomInputText value={password} secureTextEntry={true} placeholder="Password" onChangeText={text => setPassword(text)}></CustomInputText>
                 <Divider />
                 <View style={{width: '100%'}}>
-                    <CustomButton icon="login" loading={signIn} onPress={login}>Login</CustomButton>
+                    <CustomButton icon="login" loading={signIn} onPress={login}>Sign in</CustomButton>
                 </View>
 
             </View>

@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   Avatar,
   Title,
   Caption,
-  Drawer
+  Drawer,
+  Badge
 } from 'react-native-paper';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DrawerNavigator = props => {
+ 
+  const {user} = props
+
   const navigateTo = view => {
     props.navigation.navigate(view);
   };
@@ -23,9 +28,9 @@ const DrawerNavigator = props => {
             <View style={{flexDirection: 'row', marginTop: 15}}>
               <Avatar.Icon icon="account" size={80} />
             </View>
-            <View style={{marginLeft: 15, flexDirection: 'column'}}>
-              <Title style={styles.title}>Username</Title>
-              <Caption style={styles.caption}>Email@email.com</Caption>
+            <View style={{marginTop: 20, marginBottom: 20, flexDirection: 'column'}}>
+              <Title style={styles.title}>{user?.firstName} {user?.lastName}</Title>
+              <Caption style={styles.caption}>{user?.email}</Caption>
             </View>
           </View>
 
@@ -36,7 +41,7 @@ const DrawerNavigator = props => {
                 <Icon name="home-outline" color={color} size={size} />
               )}
               onPress={() => navigateTo('Home')}
-            />
+            ></DrawerItem>
 
             <DrawerItem
               label="Configuration"
@@ -46,13 +51,17 @@ const DrawerNavigator = props => {
               onPress={() => navigateTo('Configuration')}
             />
 
-            <DrawerItem
-              label="Older flashcards"
-              icon={({color, size}) => (
-                <Icon name="settings" color={color} size={size} />
-              )}
-              onPress={() => navigateTo('Configuration')}
-            />
+            <SafeAreaView style={{flexDirection: 'row'}}>
+              <DrawerItem
+                label="Older flashcards"
+                icon={({color, size}) => (
+                  <Icon name="cards-outline" color={color} size={size} />
+                )}
+                style={{flexWrap: 'wrap'}}
+                onPress={() => navigateTo('Configuration')}
+              />
+              <Badge size={30} style={{position: 'absolute', right: 10, top: 0}}>10</Badge>
+            </SafeAreaView>
 
             <DrawerItem
               label="Sign out"

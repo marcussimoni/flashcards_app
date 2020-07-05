@@ -1,115 +1,144 @@
-import React, {useEffect, useState, Fragment} from 'react';
-import {View, Alert} from 'react-native';
+import React, {Fragment, Component} from 'react';
+import {View} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './Styles';
 import CustomModal from '../Common/CustomModal';
 import AddFlashcard from './AddFlashcard';
 import FlashcardsService from '../../services/FlashcardsService';
-import {Card, Title, Paragraph, Avatar, Divider, FAB} from 'react-native-paper'
+import {Card, Title, Paragraph, Menu, Divider, FAB} from 'react-native-paper';
 import CustomLoading from '../Common/CustomLoading';
 import Style from '../../style';
+import CustomMenu from '../Common/CustomMenu';
 
 Icon.loadFont();
 
-const ShowNewCardModal = (component, {showModal}) => (
-  <CustomModal showModal={showModal}>{component}</CustomModal>
-);
+export default class ListFlashcards extends Component {
+  
+  constructor() {
+    
+    super();
+    
+    this.state = {
+      flashcards: [],
+      showModal: false,
+      loading: false,
+      floatButtonLabel: 'new',
+      showMenu: false,
+    };
 
-const ListFlashcards = ({navigation, route}) => {
-  const [flashcards, setFlashcards] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const [floatButtonLabel, setFloatButtonLabel] = useState('')
-  const deck = route.params.deck;
+  }
 
-  const findAllFlashcards = deck => {
-    setLoading(true)
-    setFloatButtonLabel('create new flashcard')
+  setLoading = (loading) => {
+    this.setState({loading})
+  }
+
+  setShowMenu = (showMenu) => {
+    this.setState({showMenu})
+  }
+
+  setFloatButtonLabel = (floatButtonLabel) => {
+    this.setState({floatButtonLabel})
+  }
+
+  hideFloatButton = () => {
+    this.setLoading(false);
+  };
+
+  findAllFlashcards = deck => {
+    
+    this.setLoading(true);
+
     FlashcardsService.findByDeck(deck)
       .then(response => response.json())
       .then(json => {
-        setFlashcards(json)
-        setLoading(false)
-        setFloatButtonLabel('')
-      }).catch(error => {
-        setLoading(false)
-        setFloatButtonLabel('')
+        this.setState({flashcards: json});
+        this.hideFloatButton();
+      })
+      .catch(error => {
+        this.hideFloatButton();
       });
   };
 
-  const deleteFlashcard = flashcard => {
-    Alert.alert(
-      'Delete flashcard',
-      `Confirm remove of '${flashcard.question}' flashcard?`,
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            FlashcardsService.delete(flashcard.id)
-              .then(response => findAllFlashcards(route.params.deck.id))
-              .catch(error => alert('Failed to remove falshcard'));
-          },
-        },
-        {text: 'No'},
-      ],
-    );
+  deleteFlashcard = flashcard => {
+    this.setShowMenu(true)
   };
 
-  useEffect(() => {
-    findAllFlashcards(route.params.deck.id);
-    return () => {};
-  }, []);
+  
 
-  const ModalAddNewFlashcard = () => {
+  componentDidMount = () => {
+    this.findAllFlashcards(this.props.route.params.deck.id);
+  };
+
+  render = () => {
+
+    const ModalAddNewFlashcard = () => {
+      const deck = this.props.route.params.deck
+
+      const ShowNewCardModal = (component, {showModal}) => (
+        <CustomModal showModal={showModal}>{component}</CustomModal>
+      );
+
+      return (
+        <ShowNewCardModal
+          showModal={this.state.showModal}
+          closeModal={() => this.setState({showModal: false})}>
+          <AddFlashcard
+            deck={deck}
+            updateFlashcards={() => this.findAllFlashcards(deck.id)}
+          />
+        </ShowNewCardModal>
+      );
+    };
+
     return (
-      <ShowNewCardModal
-        showModal={showModal}
-        closeModal={() => setShowModal(false)}>
-        <AddFlashcard
-          deck={deck}
-          updateFlashcards={() => findAllFlashcards(route.params.deck.id)}
-        />
-      </ShowNewCardModal>
+      <Fragment>
+        <ModalAddNewFlashcard />
+        <CustomLoading animating={this.state.loading} />
+
+        <CustomMenu visible={this.state.showMenu} onDismiss={() => this.setShowMenu(false)}>
+          <Menu.Item icon="update" onPress={() => alert('update')} title="Update"/>
+          <Menu.Item icon="delete" onPress={() => alert('delete')} title="Delete"/>
+          <Menu.Item icon="close" onPress={() => this.setShowMenu(false)} title="Close menu"/>
+        </CustomMenu>
+
+        <View>
+          <FlatList
+            data={this.state.flashcards}
+            keyExtractor={(id, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity onLongPress={() => this.deleteFlashcard(item)}>
+                  <Card key={index} style={styles.listItem}>
+                    <Title style={styles.listQuestion}>{item.question}</Title>
+                    <Divider
+                      style={{
+                        backgroundColor: 'white',
+                        marginTop: 10,
+                        marginBottom: 10,
+                      }}
+                    />
+                    <Paragraph style={styles.listAnswer}>
+                      {item.answer}
+                    </Paragraph>
+                  </Card>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
+        {this.state.loading ? null : (
+          <FAB
+            style={styles.floatButton}
+            color={Style.backgroundColor}
+            icon="plus"
+            large
+            loading={this.state.showModal}
+            label={this.state.floatButtonLabel}
+            onPress={() => this.setState({showModal: true})}
+          />
+        )}
+      </Fragment>
     );
   };
-
-  return (
-    <Fragment>
-      
-      <ModalAddNewFlashcard />
-      
-      <CustomLoading animating={loading}/>
-
-      <View>
-        <FlatList
-          data={flashcards}
-          keyExtractor={(id, index) => index.toString()}
-          renderItem={({item, index}) => {
-            return (
-              <TouchableOpacity onLongPress={() => deleteFlashcard(item)}>
-                <Card key={index} style={styles.listItem}>
-                  <Title style={styles.listQuestion}>{item.question}</Title>
-                  <Divider style={{backgroundColor: 'white', marginTop: 10, marginBottom: 10}}/>
-                  <Paragraph style={styles.listAnswer}>{item.answer}</Paragraph>
-                </Card>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
-      {
-        loading ? null :
-        <FAB
-          style={styles.floatButton}
-          color={Style.backgroundColor}
-          icon="plus" large loading={showModal}
-          label={floatButtonLabel}
-          onPress={() => setShowModal(true)}
-        />
-      }
-    </Fragment>
-  );
-};
-
-export default ListFlashcards;
+}
