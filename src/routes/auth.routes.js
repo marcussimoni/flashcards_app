@@ -5,7 +5,9 @@ import Login from '../components/Login'
 const AuthStack = createStackNavigator();
 
 const AuthRoutes = () => (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator screenOptions={{
+        headerShown: false
+    }}>
         <AuthStack.Screen name="Login" component={Login}></AuthStack.Screen>
     </AuthStack.Navigator>
 )

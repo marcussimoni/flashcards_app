@@ -6,6 +6,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Flashcards from "../Flashcards";
 import DeckService from '../../services/DeckService'
 import CustomLoading from '../Common/CustomLoading';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Style from '../../style';
+
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
@@ -57,8 +60,15 @@ const Deck = () => {
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Decks" component={DeckStack}/>
-            <Tab.Screen name="AddDeck" component={AddDeck}/>
+            <Tab.Screen name="Decks" component={DeckStack} options={{
+                tabBarLabel: 'Decks',
+                tabBarIcon: () => <Icon name="home" color={Style.backgroundColor}/>
+            }}/>
+            <Tab.Screen name="AddDeck" component={AddDeck} 
+                options={{
+                tabBarLabel: 'Create new',
+                tabBarIcon: () => <Icon name="plus" color={Style.backgroundColor}/>
+            }}/>
         </Tab.Navigator>
         
     )

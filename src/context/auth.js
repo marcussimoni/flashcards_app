@@ -9,20 +9,19 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null)
     const [user, setUser] = useState(null)
     
-    function loginHandler(email, password){
+    function loginHandler(email, password, erroCallback){
         HttpService().post('authentication/sign-in',{email, password}).then(response => response.json()).then(json => {
             const setItem = async () => await AsyncStorage.setItem('token', JSON.stringify(json.token))
             setItem()
             setToken(json.token)
             setUser(json)
         }).catch(error => {
-            console.warn(error)
+            errorCallback()
         })
-    
     }
 
     return (
-        <AuthContext.Provider value={{ token: token, loginHandler: loginHandler, user: user }}>
+        <AuthContext.Provider value={{ token: token, loginHandler: loginHandler, user: user}}>
             {children}
         </AuthContext.Provider>
     )

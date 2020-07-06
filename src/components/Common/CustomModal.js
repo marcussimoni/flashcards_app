@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Modal, View, Button} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, Animated} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 Icon.loadFont();
@@ -43,12 +43,20 @@ const styles = StyleSheet.create({
 });
 
 const CustomModal = props => {
+  const opacity = new Animated.Value(0)
+  if(props.children.showModal){
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  }
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={props.children.showModal}>
-      <View style={styles.centeredView}>
+      <Animated.View style={[styles.centeredView, {opacity: opacity}]}>
         <View style={styles.modalView}>
           <View style={styles.closeButton}>
             <TouchableOpacity onPress={() => props.children.closeModal()}>
@@ -57,7 +65,7 @@ const CustomModal = props => {
           </View>
           <View style={styles.modalContent}>{props.children.children}</View>
         </View>
-      </View>
+      </Animated.View>
     </Modal>
   );
 };

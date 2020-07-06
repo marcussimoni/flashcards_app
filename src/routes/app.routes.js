@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import DrawerNavigator from '../components/Navigators/DrawerNavigator'
 import AuthContext from '../context/auth';
 import FlashcardsService from '../services/FlashcardsService';
+import Style from '../style';
 
 Icon.loadFont();
 
@@ -15,7 +16,13 @@ const Drawer = createDrawerNavigator();
 
 const StackNavigator = () => {
   return (
-    <AppStack.Navigator>
+    <AppStack.Navigator screenOptions={{
+      title: 'Decks',
+      headerStyle: {
+        backgroundColor: Style.backgroundColor,
+      },
+      headerTintColor: '#fff'
+    }}>
       <AppStack.Screen name="Deck" component={Deck} />
     </AppStack.Navigator>
   );

@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react'
+import { View, StyleSheet, Animated, Alert } from 'react-native';
 import AuthContext from '../../context/auth'
 import CustomInputText from '../Common/CustomInputText';
 import CustomButton from '../Common/CustomButton';
@@ -35,6 +35,38 @@ const styles = StyleSheet.create({
     }
 }) 
 
+const animations = {
+    margin: new Animated.Value(-1000),
+    opacity: new Animated.Value(0),
+    button: new Animated.Value(-1000),
+}
+
+const startAnimation = () => {
+    Animated.sequence([
+        Animated.timing(animations.margin,{
+            toValue: 0,
+            duration: 1500,
+            useNativeDriver: false
+        }),
+        Animated.timing(animations.opacity, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true
+        }),
+        Animated.timing(animations.button, {
+            toValue: 50,
+            duration: 300,
+            useNativeDriver: false
+        }),
+        Animated.timing(animations.button, {
+            toValue: 0,
+            duration: 350,
+            useNativeDriver: false
+        })
+    ]).start()
+}
+
+
 const Login = () => {   
     
     const { loginHandler } = useContext(AuthContext);
@@ -42,31 +74,39 @@ const Login = () => {
     const [password, setPassword] = useState("123456")
     const [signIn, setSignIn] = useState(false)
     
+    useEffect(() => {
+        startAnimation()
+        return () => {}
+    }, [])
+
     function login(){
-        try {
-            loginHandler(username, password)
-            setSignIn(true)
-        } catch (Error) {
+        setSignIn(true)
+        loginHandler(username, password, () => {
+            Alert.alert('Sign in error', 'sign failed')
             setSignIn(false)
-        }
+        })
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-                <Title style={styles.mainTitle}>Flashcards</Title>
-                <Paragraph style={styles.descriptionTitle}>Keep learning with flashcards</Paragraph>
+                <Animated.View style={{marginTop: animations.margin}}>
+                    <Title style={styles.mainTitle}>Flashcards</Title>
+                </Animated.View>
+                <Animated.View>
+                    <Paragraph style={styles.descriptionTitle}>Keep learning with flashcards</Paragraph>
+                </Animated.View>
             </View>
-            <View style={styles.content}>
+            <Animated.View style={[styles.content, {opacity: animations.opacity}]}>
 
                 <CustomInputText value={username} placeholder="Username" onChangeText={text => setUsername(text)}></CustomInputText>
                 <CustomInputText value={password} secureTextEntry={true} placeholder="Password" onChangeText={text => setPassword(text)}></CustomInputText>
                 <Divider />
-                <View style={{width: '100%'}}>
+                <Animated.View style={[{width: '100%', opacity: 0}, {marginLeft: animations.button, opacity: 1}]}>
                     <CustomButton icon="login" loading={signIn} onPress={login}>Sign in</CustomButton>
-                </View>
+                </Animated.View>
 
-            </View>
+            </Animated.View>
             
         </View>
     )
