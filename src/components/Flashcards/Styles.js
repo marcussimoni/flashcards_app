@@ -42,15 +42,6 @@ const styles = StyleSheet.create({
     color: fontColor,
     ...textShadow,
   },
-  floatButton: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    backgroundColor: 'white',
-    borderColor: Style.backgroundColor,
-    borderWidth: 2,
-    fontSize: 50
-  }
 });
 
 export default styles

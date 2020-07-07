@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   Avatar,
@@ -14,10 +14,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DrawerNavigator = props => {
  
-  const {user, olderFlashcards} = props
+  const {user, olderFlashcards, navigation} = props
 
-  const navigateTo = view => {
-    props.navigation.navigate(view);
+  const navigateTo = (view) => {
+    navigation.navigate(view)
   };
 
   return (
@@ -58,7 +58,7 @@ const DrawerNavigator = props => {
                   <Icon name="cards-outline" color={color} size={size} />
                 )}
                 style={{flexWrap: 'wrap'}}
-                onPress={() => navigateTo('Configuration')}
+                onPress={() => navigateTo('OlderFlashcards')}
               />
               {olderFlashcards === 0 ? null : <Badge size={30} style={{position: 'absolute', right: 10, top: 0}}>{olderFlashcards}</Badge>}
             </SafeAreaView>

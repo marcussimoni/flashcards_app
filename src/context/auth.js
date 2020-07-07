@@ -9,14 +9,15 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null)
     const [user, setUser] = useState(null)
     
-    function loginHandler(email, password, erroCallback){
-        HttpService().post('authentication/sign-in',{email, password}).then(response => response.json()).then(json => {
-            const setItem = async () => await AsyncStorage.setItem('token', JSON.stringify(json.token))
+    function loginHandler(email, password){
+        HttpService.post('authentication/sign-in',{email, password}).then(response => {
+            const data = response.data
+            const setItem = async () => await AsyncStorage.setItem('token', JSON.stringify(data.token))
             setItem()
-            setToken(json.token)
-            setUser(json)
+            setToken(data.token)
+            setUser(data)
         }).catch(error => {
-            errorCallback()
+            console.warn(error)
         })
     }
 

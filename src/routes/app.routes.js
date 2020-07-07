@@ -8,6 +8,7 @@ import DrawerNavigator from '../components/Navigators/DrawerNavigator'
 import AuthContext from '../context/auth';
 import FlashcardsService from '../services/FlashcardsService';
 import Style from '../style';
+import OlderFlashcards from '../components/OlderFlashcards';
 
 Icon.loadFont();
 
@@ -32,42 +33,39 @@ const drawerContentOptions = {
   itemStyle: {marginVertical: 5},
 };
 
-const AppRoutes = (props) => {
+const AppRoutes = () => {
   
   const context = useContext(AuthContext)
   const [olderFlashcards, setOlderFlashcards] = useState(0) 
       
   useEffect(() => {
-    FlashcardsService.totalOlderFlashcards().then(response => response.json()).then(json => setOlderFlashcards(json))
+    FlashcardsService.totalOlderFlashcards().then(response => setOlderFlashcards(response.data))
     return () => {}
   }, [])
 
   return (
-  <Drawer.Navigator
-    initialRouteName="Home"
-    drawerContentOptions={drawerContentOptions}
-    drawerContent={() => <DrawerNavigator user={context.user} olderFlashcards={olderFlashcards}></DrawerNavigator>}>
-    <Drawer.Screen
-      name="Home"
-      component={StackNavigator}
-      options={{drawerIcon: () => <Icon name="home" size={24} />}}
-    />
-    <Drawer.Screen
-      name="Configuration"
-      component={Configuration}
-      options={{drawerIcon: () => <Icon name="settings" size={24} />}}
-    />
-    <Drawer.Screen
-      name="OlderFlashcards"
-      component={Configuration}
-      options={{drawerIcon: () => <Icon name="settings" size={24} />}}
-    />
-    <Drawer.Screen
-      name="Logout"
-      component={StackNavigator}
-      options={{drawerIcon: () => <Icon name="exit-to-app" size={24} />}}
-    />
-  </Drawer.Navigator>)
+    <Drawer.Navigator    
+      initialRouteName="Home"
+      drawerContentOptions={drawerContentOptions}
+      drawerContent={(props) => <DrawerNavigator user={context.user} olderFlashcards={olderFlashcards} {...props}></DrawerNavigator>}>
+      <Drawer.Screen
+        name="Home"
+        component={StackNavigator}
+      />
+      <Drawer.Screen
+        name="Configuration"
+        component={Configuration}
+      />
+      <Drawer.Screen
+        name="OlderFlashcards"
+        component={OlderFlashcards}
+      />
+      <Drawer.Screen
+        name="Logout"
+        component={StackNavigator}
+      />
+    </Drawer.Navigator>
+  )
 };
 
 export default AppRoutes;

@@ -6,10 +6,10 @@ import styles from './Styles';
 import CustomModal from '../Common/CustomModal';
 import AddFlashcard from './AddFlashcard';
 import FlashcardsService from '../../services/FlashcardsService';
-import {Card, Title, Paragraph, Menu, Divider, FAB} from 'react-native-paper';
+import {Card, Title, Paragraph, Menu, Divider} from 'react-native-paper';
 import CustomLoading from '../Common/CustomLoading';
-import Style from '../../style';
 import CustomMenu from '../Common/CustomMenu';
+import CustomFloatButton from '../Common/CustomFloadButton';
 
 Icon.loadFont();
 
@@ -50,9 +50,8 @@ export default class ListFlashcards extends Component {
     this.setLoading(true);
 
     FlashcardsService.findByDeck(deck)
-      .then(response => response.json())
-      .then(json => {
-        this.setState({flashcards: json});
+      .then(response => {
+        this.setState({flashcards: response.data});
         this.hideFloatButton();
       })
       .catch(error => {
@@ -63,8 +62,6 @@ export default class ListFlashcards extends Component {
   deleteFlashcard = flashcard => {
     this.setShowMenu(true)
   };
-
-  
 
   componentDidMount = () => {
     this.findAllFlashcards(this.props.route.params.deck.id);
@@ -127,17 +124,13 @@ export default class ListFlashcards extends Component {
             }}
           />
         </View>
-        {this.state.loading ? null : (
-          <FAB
-            style={styles.floatButton}
-            color={Style.backgroundColor}
-            icon="plus"
-            large
-            loading={this.state.showModal}
-            label={this.state.floatButtonLabel}
-            onPress={() => this.setState({showModal: true})}
-          />
-        )}
+        {this.state.loading ? null : <CustomFloatButton
+                                        onPress={() => this.setState({showModal: true})}
+                                        label={this.state.floatButtonLabel}
+                                        showModal={this.state.showModal}
+                                        loading={this.state.showModal}
+                                        icon="plus"
+                                        />}
       </Fragment>
     );
   };

@@ -21,8 +21,8 @@ const ListDeckComponent = (props) => {
 
     const findAllDecks = () => {
         setLoading(true)
-        DeckService.findAll().then(response => response.json()).then(json => {
-            setDecks(json)
+        DeckService.findAll().then(response => {
+            setDecks(response.data)
             setLoading(false)
         }).catch(error => {
             setLoading(false)

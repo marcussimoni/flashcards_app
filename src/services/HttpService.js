@@ -1,45 +1,30 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios'
 
-const getHeaders = (token) => {
-    const headers = new Headers({
-        'content-type': 'application/json'
-    }) 
-    if(token){
-        token = JSON.parse(token)
-        headers.append('Authorization', `${token.type} ${token.token}`)
-    }
-    return headers
-}
+const HttpService = axios.create({
+    baseURL: "http://10.0.2.2:8080/flashcards/resources"
+});
 
-const HttpService = () => {
-
-    const url = 'http://10.0.2.2:8080/flashcards/resources'
+HttpService.interceptors.response.use(response => {
+  
+    return response;
     
-    return {
-        get: async (path) => {
-            const token = await AsyncStorage.getItem('token')
-            return fetch(`${url}/${path}`, {
-                method: 'get',
-                headers: getHeaders(token)
-            })
-        },
-        post: async (path, body) => {
-            const token = await AsyncStorage.getItem('token')
-            return fetch(`${url}/${path}`, {
-                method: 'post',
-                headers: getHeaders(token),
-                body: JSON.stringify(body)
-            }) 
-        },
-        delete: async (path) => {
-            const token = await AsyncStorage.getItem('token')
-            return fetch(`${url}/${path}`, {
-                method: 'delete',
-                headers: getHeaders(token)
-            }) 
-        }
+  }, error => {
+ 
+    return Promise.reject(error.response)
+
+})
+  
+HttpService.interceptors.request.use(async config => {
+
+    const token = await AsyncStorage.getItem('token')
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${JSON.parse(token).token}`;
     }
 
-}
+    return config;
+
+});
 
 export default HttpService;

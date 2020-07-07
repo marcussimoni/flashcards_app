@@ -13,7 +13,7 @@ const AddFlashcard = ({deck, updateFlashcards}) => {
   const save = () => {
     if(question && answer){
         const flashcard = {question, answer, deck}
-        FlashcardsService.save(flashcard).then(response => response.json()).then(json => {
+        FlashcardsService.save(flashcard).then(response => {
             Alert.alert('Create new flashcard', 'Flashcard create successfuly', [
               { text: 'OK', onPress: () => updateFlashcards() }
             ])
